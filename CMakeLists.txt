@@ -17,6 +17,8 @@ INCLUDE_DIRECTORIES(${SOURCE_DIR}/include)
 ### 输出路径
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY          ${MAIN_DIR})
 
+### 编译选项
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall")
 
 ### 添加DEMO
 ADD_EXECUTABLE(demo_vector                  ${STL_DEMOS}/demo_vector.cpp)

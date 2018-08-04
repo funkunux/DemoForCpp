@@ -22,6 +22,8 @@ Build()
     cd build
     cmake ..
     [ -f Makefile ] && make && echo "Done!"
+    echo
+    echo "------ Demos ------"
     ls -l ../demo_*
 }
 
