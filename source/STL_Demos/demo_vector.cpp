@@ -1,5 +1,6 @@
 #include "cppDemo.h"
 #include <vector>
+#include <algorithm>
 
 template<class T>
 typename T::value_type sum(const T& container)
@@ -11,6 +12,20 @@ typename T::value_type sum(const T& container)
         s += *iter++;
     }
     return s;
+}
+
+template<class T>
+typename T::const_iterator rfind(const T& container, typename T::value_type value)
+{
+#if 1
+    typename T::const_reverse_iterator riter = find(container.rbegin(), container.rend(), value);
+#else
+    typename T::reverse_iterator riter = container.rbegin();
+    for(; riter != container.rend() && *riter != value; riter++);
+#endif
+    if(riter == container.rend()) return container.end();
+    typename T::const_iterator iter = riter.base();
+    return --iter;
 }
 
 int main()
@@ -31,8 +46,14 @@ int main()
     {
         cout << subStr << endl;
     }
-    string strSum = sum<vector<string> >(strVec);
+    string strSum = sum(strVec);
     debug("strSum: %s\n", strSum.c_str());
+    SEPERATOR;
+    auto iter = rfind(strVec, "world");
+    if(iter == strVec.end())
+        debug("Can't rfind the key!\n");
+    else
+        debug("rfind the key!\n");
     SEPERATOR;
     return DEMO_SUCC;
 }
