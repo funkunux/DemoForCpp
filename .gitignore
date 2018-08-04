@@ -34,3 +34,6 @@
 
 # Intermediate files
 /build
+
+# Visual Studio Code
+.vscode
