@@ -31,11 +31,11 @@ typename T::const_iterator rfind(const T& container, typename T::value_type valu
 template<class T>
 void ShowElmtPtr(const vector<T> &vec)
 {
-    debug("vector size: %d, capacity: %d\n", vec.size(), vec.capacity());
+    DEMO_DEBUG("vector size: %d, capacity: %d\n", vec.size(), vec.capacity());
     int index = 0;
     for(auto elmt = vec.begin(); elmt != vec.end(); index++, elmt++)
     {
-        debug("elmt[%d]: %p\n", index, &(*elmt));
+        DEMO_DEBUG("elmt[%d]: %p\n", index, &(*elmt));
     }
 }
 
@@ -54,30 +54,30 @@ public:
 
 void ShowStrVec(const vector<string>& vec)
 {
-    debug("vec capacity:%d size:%d\n", vec.capacity(), vec.size());
+    DEMO_DEBUG("vec capacity:%d size:%d\n", vec.capacity(), vec.size());
     for(auto iter = vec.begin(); iter != vec.end(); iter++)
     {
-        debug("vec[%p]: %s, cap:%d\n", &(*iter), (*iter).c_str(), (*iter).capacity());
+        DEMO_DEBUG("vec[%p]: %s, cap:%d\n", &(*iter), (*iter).c_str(), (*iter).capacity());
     }
 }
 
 class Test
 {
 public:
-    Test(){debug("Construct[%p]! \n", this);}
-    ~Test(){debug("Destruct[%p]!\n", this);}
+    Test(){DEMO_DEBUG("Construct[%p]! \n", this);}
+    ~Test(){DEMO_DEBUG("Destruct[%p]!\n", this);}
 };
 
 int main()
 {
-    debug("DEMO: Vector\n");
+    DEMO_DEBUG("DEMO: Vector\n");
 
     SEPERATOR;
 
     string str = "hello~";
     char cSum = sum<string>(str);
-    debug("str:%s\n", str.c_str());
-    debug("cSum:%d\n", cSum);
+    DEMO_DEBUG("str:%s\n", str.c_str());
+    DEMO_DEBUG("cSum:%d\n", cSum);
 
     SEPERATOR;
 
@@ -91,20 +91,20 @@ int main()
         cout << subStr << endl;
     }
     string strSum = sum(strVec);
-    debug("strSum: %s\n", strSum.c_str());
+    DEMO_DEBUG("strSum: %s\n", strSum.c_str());
 
     SEPERATOR;
 
     auto iter = rfind(strVec, "world");
     if(iter == strVec.end())
-        debug("Can't rfind the key!\n");
+        DEMO_DEBUG("Can't rfind the key!\n");
     else
-        debug("rfind the key!\n");
+        DEMO_DEBUG("rfind the key!\n");
 
     SEPERATOR;
 
     vector<char> vecChar(str.begin(), str.end());
-    debug("vecChar:");
+    DEMO_DEBUG("vecChar:");
     for(auto c : vecChar)
     {
         printf("%c", c);
@@ -114,7 +114,7 @@ int main()
     SEPERATOR;
 
     vecChar.assign(10, '~');
-    debug("vecChar:");
+    DEMO_DEBUG("vecChar:");
     for(auto c : vecChar)
     {
         printf("%c", c);
@@ -207,11 +207,11 @@ int main()
     SEPERATOR;
 
     /* string和vector相似,初始capacity为15,当size>=cap时,会重新申请内存 */
-    debug("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
+    DEMO_DEBUG("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
     str = "";
-    debug("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
+    DEMO_DEBUG("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
     str = "hello world !!!!!";
-    debug("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
+    DEMO_DEBUG("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
     
     SEPERATOR;
 

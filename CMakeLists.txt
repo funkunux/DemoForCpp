@@ -8,6 +8,7 @@ SET(SOURCE_DIR                              ${MAIN_DIR}/source)
 
 ### 设置各个DEMO文件夹
 SET(STL_DEMOS                               ${SOURCE_DIR}/STL_Demos)
+SET(TEMPLATE_DEMOS                          ${SOURCE_DIR}/template_Demos)
 
 #AUX_SOURCE_DIRECTORY(<dir> <variable>)
 
@@ -22,3 +23,4 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall")
 
 ### 添加DEMO
 ADD_EXECUTABLE(demo_vector                  ${STL_DEMOS}/demo_vector.cpp)
+ADD_EXECUTABLE(demo_template_unit_program   ${TEMPLATE_DEMOS}/demo_template_unit_program.cpp)
