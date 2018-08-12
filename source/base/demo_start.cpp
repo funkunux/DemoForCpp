@@ -43,14 +43,12 @@ int main(int argc, char** argv)
         case 1:
             dm.Run();
             return 0;
-            break;
         case 2:
         {
             int index = str2uint(argv[1]);
             if(0 > index) break;
             dm.Run(index);
             return 0;
-            break;
         }
         default:
             break;
