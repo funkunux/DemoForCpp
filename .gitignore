@@ -30,7 +30,7 @@
 *.exe
 *.out
 *.app
-/demo_*
+/run_demo
 
 # Intermediate files
 /build
