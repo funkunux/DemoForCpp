@@ -12,7 +12,7 @@ Clean()
 {
     echo "Clean All"
     [ -d "./build" ] && rm -rf build
-    rm -f demo_*
+    rm -f run_demo
 }
 
 Build()
@@ -24,7 +24,7 @@ Build()
     [ -f Makefile ] && make && echo "Done!"
     echo
     echo "------ Demos ------"
-    ls -l ../demo_*
+    ls -l ../run_demo
 }
 
 if [ $# -gt 1 ]; then

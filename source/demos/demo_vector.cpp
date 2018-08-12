@@ -1,6 +1,7 @@
-#include "cppDemo.h"
 #include <vector>
 #include <algorithm>
+#include "Demo.h"
+#include "Logging.h"
 
 template<class T>
 typename T::value_type sum(const T& container)
@@ -68,7 +69,7 @@ public:
     ~Test(){DEMO_DEBUG("Destruct[%p]!\n", this);}
 };
 
-int main()
+void demo_vector()
 {
     DEMO_DEBUG("DEMO: Vector\n");
 
@@ -214,6 +215,4 @@ int main()
     DEMO_DEBUG("str[%p] c_str[%p] size:%d, cap:%d\n", &str, str.c_str(), str.size(), str.capacity());
     
     SEPERATOR;
-
-    return DEMO_SUCC;
 }

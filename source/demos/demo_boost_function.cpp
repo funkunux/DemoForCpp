@@ -1,5 +1,6 @@
-#include "cppDemo.h"
 #include <functional>
+#include "Demo.h"
+#include "Logging.h"
 
 class CFunction
 {
@@ -15,7 +16,7 @@ void closure(string str1, string str2)
 
 typedef void (*ptrStatic)();
 typedef void (CFunction::*ptrNonStatic)();
-int main()
+void demo_boost_function()
 {
     CFunction cfunc;
     ptrStatic f1 = &CFunction::staticFunc;
@@ -40,5 +41,4 @@ int main()
     f6("Hello", "world");
     f7("Hello", "world");
     f8("Hello", "world");
-    return 0;
 }

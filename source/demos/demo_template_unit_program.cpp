@@ -1,5 +1,6 @@
-#include "cppDemo.h"
 #include <string.h>
+//#include "Logging.h"
+#include "Demo.h"
 #include "Logging.h"
 
 
@@ -26,14 +27,13 @@ int sum()
 
 char Msg[] = "Demo of translation unit";
 
-int main()
+void demo_template_unit_program()
 {
-    Logging::level = Logging::DEBUG;
+    
     Info<Msg> info;
     DEMO_INFO("Info: %s\n", info.msg);
     DEMO_DEBUG("Length: %d\n", length(Msg));
     DEMO_DEBUG("Sum: %d\n", sum<2, 3>());
-    return 0;
 }
 
 
