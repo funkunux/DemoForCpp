@@ -26,3 +26,4 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -Wall")
 
 ### 添加DEMO
 ADD_EXECUTABLE(run_demo                             ${ALL_SRC})
+TARGET_LINK_LIBRARIES(run_demo                      pthread)

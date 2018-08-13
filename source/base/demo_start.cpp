@@ -37,6 +37,7 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_vector, "demo_vector", "STL API of vector.");
     dm.RegistDemo(demo_template_unit_program, "demo_template_unit_program", "Demo of unit programming.");
     dm.RegistDemo(demo_boost_function, "demo_boost_function", "Demo of closure function by boost API.");
+    dm.RegistDemo(demo_condition, "demo_condition", "Demo of condition and mutex.");
 
     switch(argc)
     {
@@ -52,7 +53,7 @@ int main(int argc, char** argv)
         }
         default:
             break;
-    }
+    };
     ShowUsage(argv[0], dm);
 
     return 0;
