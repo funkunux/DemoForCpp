@@ -38,6 +38,7 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_template_unit_program, "demo_template_unit_program", "Demo of unit programming.");
     dm.RegistDemo(demo_boost_function, "demo_boost_function", "Demo of closure function by boost API.");
     dm.RegistDemo(demo_condition, "demo_condition", "Demo of condition and mutex.");
+    dm.RegistDemo(demo_noncopyable, "demo_noncopyable", "Demo of noncopyable class.");
 
     switch(argc)
     {
