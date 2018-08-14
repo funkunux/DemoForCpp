@@ -18,7 +18,7 @@ void demo_vector();
 void demo_template_unit_program();
 void demo_boost_function();
 void demo_condition();
-void demo_test();
+void demo_noncopyable();
 
 
 
