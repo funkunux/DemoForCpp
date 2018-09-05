@@ -39,6 +39,8 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_boost_function, "demo_boost_function", "Demo of closure function by boost API.");
     dm.RegistDemo(demo_condition, "demo_condition", "Demo of condition and mutex.");
     dm.RegistDemo(demo_noncopyable, "demo_noncopyable", "Demo of noncopyable class.");
+    dm.RegistDemo(demo_mysql, "demo_mysql", "Demo of mysql.");
+    dm.RegistDemo(demo_find_odd_num_of_char, "demo_find_odd_num_of_char", "Simple algorithm to find the odd num of char.");
 
     switch(argc)
     {

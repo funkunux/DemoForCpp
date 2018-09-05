@@ -19,6 +19,8 @@ void demo_template_unit_program();
 void demo_boost_function();
 void demo_condition();
 void demo_noncopyable();
+void demo_mysql(void);
+void demo_find_odd_num_of_char(void);
 
 
 
