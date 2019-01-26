@@ -7,6 +7,7 @@ MutexLock::MutexLock()
 }
 MutexLock::~MutexLock()
 {
+    assert(0 == holder_);
     pthread_mutex_destroy(&mutex_);
 }
 
@@ -27,7 +28,7 @@ bool MutexLock::isHoldByCurrentThread()
     return pthread_equal(pthread_self(), holder_);
 }
 
-MutexLockGuard::MutexLockGuard(MutexLock m)
+MutexLockGuard::MutexLockGuard(MutexLock& m)
     : mutex_(m)
 {
     mutex_.lock();

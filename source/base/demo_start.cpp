@@ -34,6 +34,7 @@ int main(int argc, char** argv)
 {
     Logging::level = Logging::DEBUG;
     DemoManager dm;
+    dm.RegistDemo(demo_whatever, "demo_whatever", "Whatever...");
     dm.RegistDemo(demo_vector, "demo_vector", "STL API of vector.");
     dm.RegistDemo(demo_template_unit_program, "demo_template_unit_program", "Demo of unit programming.");
     dm.RegistDemo(demo_boost_function, "demo_boost_function", "Demo of closure function by boost API.");
@@ -42,7 +43,7 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_mysql, "demo_mysql", "Demo of mysql.");
     dm.RegistDemo(demo_find_odd_num_of_char, "demo_find_odd_num_of_char", "Simple algorithm to find the odd num of char.");
     dm.RegistDemo(demo_get_os_endian, "demo_get_os_endian", "Demo for get OS endian.");
-    dm.RegistDemo(demo_whatever, "demo_whatever", "Whatever...");
+    dm.RegistDemo(demo_object_pool, "demo_object_pool", "Thread saved object pool.");
 
     switch(argc)
     {
