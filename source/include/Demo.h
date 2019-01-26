@@ -22,6 +22,7 @@ void demo_noncopyable();
 void demo_mysql(void);
 void demo_find_odd_num_of_char(void);
 void demo_get_os_endian(void);
+void demo_whatever();
 
 
 
