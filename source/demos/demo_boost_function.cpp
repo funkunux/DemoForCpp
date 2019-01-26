@@ -4,9 +4,16 @@
 
 class CFunction
 {
+private:
+    int getTime;
 public:
+    CFunction() : getTime(0) {}
     static void staticFunc(){DEMO_INFO("static\n");}
     void nonStatic(){DEMO_INFO("non static\n");}
+    void operator()()
+    {
+        DEMO_INFO("getTime: %d\n", ++getTime);
+    }
 };
 
 void closure(string str1, string str2)
@@ -41,4 +48,5 @@ void demo_boost_function()
     f6("Hello", "world");
     f7("Hello", "world");
     f8("Hello", "world");
+    for(int i = 0; i < 10; i++) cfunc();
 }
