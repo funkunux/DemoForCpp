@@ -5,6 +5,8 @@
 #include <map>
 #include <string>
 #include <memory>   //weak_ptr, shared_ptr
+#include <functional>   //bind function
+#include <assert.h>
 
 class Object : boost::noncopyable
 {
@@ -28,10 +30,30 @@ public:
     }
 };
 
-class ObjectPool : boost::noncopyable
+class ObjectPool : boost::noncopyable, public enable_shared_from_this<ObjectPool>
 {
     mutable MutexLock mutex_;
     map<string, weak_ptr<Object>> objects_;
+    void deleteObject(Object* pObject)
+    {
+        if(pObject);
+        {
+            DEMO_DEBUG("key:%s\n", pObject->key().c_str());
+            MutexLockGuard lock(mutex_);
+            objects_.erase(pObject->key());
+        }
+    }
+
+    static void weakDeleteObject(const weak_ptr<ObjectPool>& wkObjPool, Object* pObject)
+    {
+        shared_ptr<ObjectPool> pObjPool = wkObjPool.lock();
+        if(pObjPool)
+        {
+            pObjPool->deleteObject(pObject);
+        }
+        delete pObject;
+    }
+
 public:
     shared_ptr<Object> get(string name)
     {
@@ -41,7 +63,7 @@ public:
         pObject = wkObject.lock();
         if(!pObject)
         {
-            pObject.reset(new Object(name));
+            pObject.reset(new Object(name), bind(&ObjectPool::weakDeleteObject, weak_ptr<ObjectPool>(shared_from_this()), placeholders::_1));
             wkObject = pObject;
         }
         return pObject;
@@ -57,11 +79,11 @@ void demo_object_pool()
 {
     shared_ptr<Object> test;
     {
-        ObjectPool pool;
-        test = pool.get("test");
-        cout << "count:" << pool.ObjectCount() << endl;
-        pool.get("single");
-        cout << "count:" << pool.ObjectCount() << endl;
+        shared_ptr<ObjectPool> pool(new ObjectPool);
+        test = pool->get("test");
+        cout << "count:" << pool->ObjectCount() << endl;
+        pool->get("single");
+        cout << "count:" << pool->ObjectCount() << endl;
     }
     cout << "test->key: " << test->key() << endl;
 }
