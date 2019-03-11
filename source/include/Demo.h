@@ -24,5 +24,7 @@ void demo_find_odd_num_of_char(void);
 void demo_get_os_endian(void);
 void demo_whatever();
 void demo_object_pool();
+void demo_time_client();
+void demo_time_server();
 
 #endif

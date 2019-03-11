@@ -24,12 +24,12 @@ void demo_mysql(void)
         col_num = mysql_num_fields(result);
         std::cout << "共有" << row_num << "条数据，以下为其详细内容：" << std::endl;
         MYSQL_FIELD *fd;
-        while (fd = mysql_fetch_field(result)) {
+        while ((fd = mysql_fetch_field(result))) {
             std::cout << fd->name << "\t";
         }
         std::cout << std::endl;
         MYSQL_ROW sql_row;
-        while (sql_row = mysql_fetch_row(result)) {
+        while ((sql_row = mysql_fetch_row(result))) {
             for (int i = 0; i < col_num; i++) {
                 if (sql_row[i] == NULL) std::cout << "NULL\t";
                 else std::cout << sql_row[i] << "\t";

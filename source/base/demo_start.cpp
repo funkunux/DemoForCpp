@@ -44,6 +44,8 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_find_odd_num_of_char, "demo_find_odd_num_of_char", "Simple algorithm to find the odd num of char.");
     dm.RegistDemo(demo_get_os_endian, "demo_get_os_endian", "Demo for get OS endian.");
     dm.RegistDemo(demo_object_pool, "demo_object_pool", "Thread saved object pool.");
+    dm.RegistDemo(demo_time_client, "demo_time_client", "Client of getting time by web API.");
+    dm.RegistDemo(demo_time_server, "demo_time_server", "Server of getting time by web API.");
 
     switch(argc)
     {
