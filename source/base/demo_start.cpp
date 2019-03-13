@@ -46,6 +46,8 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_object_pool, "demo_object_pool", "Thread saved object pool.");
     dm.RegistDemo(demo_time_client, "demo_time_client", "Client of getting time by web API.");
     dm.RegistDemo(demo_time_server, "demo_time_server", "Server of getting time by web API.");
+    dm.RegistDemo(demo_ttcp_client, "demo_ttcp_client", "Client of TTCP by web API.");
+    dm.RegistDemo(demo_ttcp_server, "demo_ttcp_server", "Server of TTCP by web API.");
 
     switch(argc)
     {

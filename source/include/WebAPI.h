@@ -11,6 +11,7 @@
 int Close(int fd);
 int Socket(int domain, int type, int protocol);
 int Inet_pton(int af, const char* src, void* dst);
+char* Inet_ntop(int af, const void* src, char* dst, socklen_t len);
 int Connect(int sfd, const struct sockaddr* addr, socklen_t size);
 int Bind(int sfd, const struct sockaddr* addr, socklen_t len);
 int Listen(int sfd, int queueSize);
@@ -18,5 +19,7 @@ int Accept(int sfd, struct sockaddr* addr, socklen_t* plen);
 int Send(int sfd, const void* buf, int len, int flags);
 int Write(int sfd, const void* buf, int len);
 int Read(int fd, void* buf, int len);
+int Write_n(int sfd, const void* buf, int len);
+int Read_n(int fd, void* buf, int len);
 
 #endif

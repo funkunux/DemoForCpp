@@ -26,5 +26,7 @@ void demo_whatever();
 void demo_object_pool();
 void demo_time_client();
 void demo_time_server();
+void demo_ttcp_client();
+void demo_ttcp_server();
 
 #endif

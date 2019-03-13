@@ -25,6 +25,18 @@ int Inet_pton(int af, const char* src, void* dst)
     return 1;
 }
 
+char* Inet_ntop(int af, const void* src, char* dst, socklen_t len)
+{
+    assert(src && dst);
+    if(dst != inet_ntop(af, src, dst, len))
+    {
+        DEMO_ERROR("Failed to get addr\n");
+        exit(1);
+    }
+
+    return dst;
+}
+
 int Connect(int sfd, const struct sockaddr* addr, socklen_t size)
 {
     assert(addr);
@@ -88,7 +100,27 @@ int Write(int fd, const void* buf, int len)
         DEMO_ERROR("write error: %m\n");
         exit(1);
     }
+    if(n < len)
+    {
+        DEMO_WARN("expect to write %d bytes, actually wrote %d bytes\n", len, n);
+    }
     return n;
+}
+
+int Write_n(int fd, const void* buf, int len)
+{
+    int n = 0;
+    int left = len;
+    while(left > 0)
+    {
+        if((n = write(fd, (char *)buf + len - left, left)) == -1)
+        {
+            DEMO_ERROR("write error: %m\n");
+            exit(1);
+        }
+        left -= n;
+    }
+    return len - left;
 }
 
 int Read(int fd, void* buf, int len)
@@ -100,6 +132,22 @@ int Read(int fd, void* buf, int len)
         exit(1);
     }
     return n;
+}
+
+int Read_n(int fd, void* buf, int len)
+{
+    int n = 0;
+    int left = len;
+    while(left > 0)
+    {
+        if((n = read(fd, (char *)buf + len - left, left)) == -1)
+        {
+            DEMO_ERROR("read error: %m\n");
+            exit(1);
+        }
+        left -= n;
+    }
+    return len - left;
 }
 
 int Close(int fd)

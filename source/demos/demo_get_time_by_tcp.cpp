@@ -15,7 +15,7 @@ void demo_time_client()
     serverAddr.sin_port = htons(13);
     Inet_pton(AF_INET, "127.0.0.1", static_cast<void *>(&serverAddr.sin_addr.s_addr));
     Connect(sfd, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
-    int n;
+    unsigned int n;
     while((n = Read(sfd, readLine, MAXLINE)) > 0)
     {
         readLine[n] = 0;
@@ -52,7 +52,6 @@ void demo_time_server()
         time_t t = time(NULL);
         char* tStr = ctime(&t);
         assert(tStr);
-        //TODO: send in loop
         Write(cli_sfd, tStr, strnlen(tStr, MAXLINE));
         Close(cli_sfd);
     }
