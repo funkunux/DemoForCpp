@@ -1,7 +1,7 @@
 #include "Demo.h"
 #include "Logging.h"
 #include "WebAPI.h"
-#include <time.h>
+#include <sys/time.h>
 
 class SessionMessage
 {
@@ -22,7 +22,7 @@ public:
         for(unsigned int i = 0, j = 0; i < size;)
         {
             if(10 == j) j = 0;
-            content[i++] = '0' + j;
+            content[i++] = '0' + j++;
         }
     }
     ~PayloadMessage()
@@ -34,11 +34,12 @@ public:
 
 const char *ipAddr = "127.0.0.1";
 int port = 5001;
+int pipelineNum = 5;
 
 void demo_ttcp_client()
 {
-    clock_t start, end;
-    SessionMessage session(65000, 40960);
+    struct timeval start, end;
+    SessionMessage session(65535, 102400);
     PayloadMessage payload(session.size);
     
     int sfd = Socket(AF_INET, SOCK_STREAM, 0);
@@ -53,20 +54,27 @@ void demo_ttcp_client()
 
     Write(sfd, &session, sizeof(session));
     unsigned int ack;
-    start = clock();
-    for(unsigned int i = 0; i < session.count; i++)
+    gettimeofday(&start, NULL);
+    for(unsigned int i = 0; i < session.count; i += pipelineNum)
     {
-        Write_n(sfd, payload.content, payload.size);
-        Read_n(sfd, &ack, sizeof(ack));
-        if(payload.size != ack)
+        //DEMO_DEBUG("Que: %d\n", i);
+        for(int j = 0; j < pipelineNum && i + j < session.count; j++)
         {
-            DEMO_ERROR("ack[%d] != payload.size[%d]\n");
-            break;
+            Write_n(sfd, payload.content, payload.size);
+        }
+        for(int j = 0; j < pipelineNum && i + j < session.count; j++)
+        {
+            Read_n(sfd, &ack, sizeof(ack));
+            if(payload.size != ack)
+            {
+                DEMO_ERROR("ack[%d] != payload.size[%d]\n");
+                break;
+            }
         }
     }
-    end = clock();
+    gettimeofday(&end, NULL);
     double totalMib = 1.0 * session.size * session.count / 1024 / 1024;
-    double timeUsed = (double)(end - start) / CLOCKS_PER_SEC;
+    double timeUsed = (double)(end.tv_sec - start.tv_sec) + 1.0 * (end.tv_usec - start.tv_usec) / 1000000;
     printf("Total: %fMib, Spend: %fs, Speed: %fMib/s\n", totalMib, timeUsed, totalMib / timeUsed);
     Close(sfd);
 }
@@ -74,6 +82,17 @@ void demo_ttcp_client()
 void demo_ttcp_server()
 {
     int sfd = Socket(AF_INET, SOCK_STREAM, 0);
+    int tcpOptVal;
+    socklen_t tcpOptLen = sizeof(tcpOptVal);
+    Getsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, &tcpOptVal, &tcpOptLen);
+    if(!tcpOptVal)
+    {
+        DEMO_INFO("TCP_NODELAY is disable! Enable it!\n");
+        tcpOptVal = 1;
+        Setsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, &tcpOptVal, tcpOptLen);
+        Getsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, &tcpOptVal, &tcpOptLen);
+        assert(tcpOptVal);
+    }
     struct sockaddr_in addr = {0};
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
@@ -90,8 +109,7 @@ void demo_ttcp_server()
         Read_n(cli_sfd, &session.size, sizeof(session.size));
         Read_n(cli_sfd, &session.count, sizeof(session.count));
         char *addrStr = new char[32];
-        cli_addr.sin_addr.s_addr = ntohl(cli_addr.sin_addr.s_addr);
-        DEMO_INFO("Recieve %d x %d from %s\n", session.size, session.count, Inet_ntop(AF_INET, &cli_addr, addrStr, sizeof(cli_addr)));
+        DEMO_INFO("Recieve %d x %d from %s:%d\n", session.size, session.count, Inet_ntop(AF_INET, &cli_addr.sin_addr, addrStr, sizeof(cli_addr)), ntohs(cli_addr.sin_port));
         char *payload = new char[session.size];
         for(unsigned int i = 0; i < session.count; i++)
         {

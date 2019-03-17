@@ -150,6 +150,28 @@ int Read_n(int fd, void* buf, int len)
     return len - left;
 }
 
+int Getsockopt(int sfd, int level, int optname, void* optval, socklen_t* len)
+{
+    assert(optval && len);
+    if(0 != getsockopt(sfd, level, optname, optval, len))
+    {
+        DEMO_ERROR("getsockopt error: %m\n");
+        exit(1);
+    }
+    return 0;
+}
+
+int Setsockopt(int sfd, int level, int optname, const void* optval, socklen_t len)
+{
+    assert(optval);
+    if(0 != setsockopt(sfd, level, optname, optval, len))
+    {
+        DEMO_ERROR("setsockopt error: %m\n");
+        exit(1);
+    }
+    return 0;
+}
+
 int Close(int fd)
 {
     if(0 != close(fd))

@@ -2,11 +2,12 @@
 #define __WEB_API_AUTHOR_FUNKUNUX__
 
 #include <assert.h>
-#include <sys/socket.h> //socket
-//#include <sys/types.h>  
-#include <arpa/inet.h>  //sockaddr_in, htons, inet_pton
-#include <strings.h>    //bzero
-#include <unistd.h>     //read
+#include <sys/socket.h>     //socket
+#include <sys/types.h>  
+#include <netinet/tcp.h>    //define TCP_*
+#include <arpa/inet.h>      //sockaddr_in, htons, inet_pton
+#include <strings.h>        //bzero
+#include <unistd.h>         //read
 
 int Close(int fd);
 int Socket(int domain, int type, int protocol);
@@ -21,5 +22,6 @@ int Write(int sfd, const void* buf, int len);
 int Read(int fd, void* buf, int len);
 int Write_n(int sfd, const void* buf, int len);
 int Read_n(int fd, void* buf, int len);
-
+int Getsockopt(int sfd, int level, int optname, void* optval, socklen_t* len);
+int Setsockopt(int sfd, int level, int optname, const void* optval, socklen_t len);
 #endif
