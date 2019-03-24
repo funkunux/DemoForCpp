@@ -32,7 +32,7 @@ int str2uint(const char* str)
 
 int main(int argc, char** argv)
 {
-    Logging::level = Logging::DEBUG;
+    Logging::level = Logging::INFO;
     DemoManager dm;
     dm.RegistDemo(demo_whatever, "demo_whatever", "Whatever...");
     dm.RegistDemo(demo_vector, "demo_vector", "STL API of vector.");

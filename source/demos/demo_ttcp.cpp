@@ -39,7 +39,7 @@ int pipelineNum = 5;
 void demo_ttcp_client()
 {
     struct timeval start, end;
-    SessionMessage session(65535, 102400);
+    SessionMessage session(1024, 20);
     PayloadMessage payload(session.size);
     
     int sfd = Socket(AF_INET, SOCK_STREAM, 0);
@@ -87,7 +87,7 @@ void demo_ttcp_server()
     Getsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, &tcpOptVal, &tcpOptLen);
     if(!tcpOptVal)
     {
-        DEMO_INFO("TCP_NODELAY is disable! Enable it!\n");
+        DEMO_DEBUG("TCP_NODELAY is disable! Enable it!\n");
         tcpOptVal = 1;
         Setsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, &tcpOptVal, tcpOptLen);
         Getsockopt(sfd, IPPROTO_TCP, TCP_NODELAY, &tcpOptVal, &tcpOptLen);
@@ -98,24 +98,30 @@ void demo_ttcp_server()
     addr.sin_port = htons(port);
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
     Bind(sfd, (struct sockaddr*)&addr, sizeof(addr));
-    Listen(sfd, 1);
+    Listen(sfd, 3);
     while(true)
     {
         int cli_sfd;
         sockaddr_in cli_addr;
         int cli_addr_len = sizeof(cli_addr);
         cli_sfd = Accept(sfd, (struct sockaddr*)&cli_addr, (socklen_t*)&cli_addr_len);
-        SessionMessage session(0, 0);
-        Read_n(cli_sfd, &session.size, sizeof(session.size));
-        Read_n(cli_sfd, &session.count, sizeof(session.count));
-        char *addrStr = new char[32];
-        DEMO_INFO("Recieve %d x %d from %s:%d\n", session.size, session.count, Inet_ntop(AF_INET, &cli_addr.sin_addr, addrStr, sizeof(cli_addr)), ntohs(cli_addr.sin_port));
-        char *payload = new char[session.size];
-        for(unsigned int i = 0; i < session.count; i++)
+        if(!fork())
         {
-            int n;
-            n = Read_n(cli_sfd, payload, session.size);
-            Write_n(cli_sfd, &n, sizeof(n));
+            Close(sfd);
+            SessionMessage session(0, 0);
+            Read_n(cli_sfd, &session.size, sizeof(session.size));
+            Read_n(cli_sfd, &session.count, sizeof(session.count));
+            char *addrStr = new char[32];
+            DEMO_INFO("Recieve %d x %d from %s:%d\n", session.size, session.count, Inet_ntop(AF_INET, &cli_addr.sin_addr, addrStr, sizeof(cli_addr)), ntohs(cli_addr.sin_port));
+            char *payload = new char[session.size];
+            for(unsigned int i = 0; i < session.count; i++)
+            {
+                int n;
+                n = Read_n(cli_sfd, payload, session.size);
+                Write_n(cli_sfd, &n, sizeof(n));
+            }
+            Close(cli_sfd);
+            exit(0);
         }
         Close(cli_sfd);
     }
