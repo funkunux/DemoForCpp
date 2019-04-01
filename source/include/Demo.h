@@ -28,5 +28,7 @@ void demo_time_client();
 void demo_time_server();
 void demo_ttcp_client();
 void demo_ttcp_server();
+void demo_echo_client();
+void demo_echo_server();
 
 #endif

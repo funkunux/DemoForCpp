@@ -32,7 +32,7 @@ int str2uint(const char* str)
 
 int main(int argc, char** argv)
 {
-    Logging::level = Logging::INFO;
+    Logging::level = Logging::DEBUG;
     DemoManager dm;
     dm.RegistDemo(demo_whatever, "demo_whatever", "Whatever...");
     dm.RegistDemo(demo_vector, "demo_vector", "STL API of vector.");
@@ -48,6 +48,8 @@ int main(int argc, char** argv)
     dm.RegistDemo(demo_time_server, "demo_time_server", "Server of getting time by web API.");
     dm.RegistDemo(demo_ttcp_client, "demo_ttcp_client", "Client of TTCP by web API.");
     dm.RegistDemo(demo_ttcp_server, "demo_ttcp_server", "Server of TTCP by web API.");
+    dm.RegistDemo(demo_echo_client, "demo_echo", "Client of echo demo.");
+    dm.RegistDemo(demo_echo_server, "demo_echo", "Server of echo demo.");
 
     switch(argc)
     {

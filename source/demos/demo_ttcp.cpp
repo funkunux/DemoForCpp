@@ -34,7 +34,7 @@ public:
 
 const char *ipAddr = "127.0.0.1";
 int port = 5001;
-int pipelineNum = 5;
+int pipelineNum = 1;
 
 void demo_ttcp_client()
 {
@@ -67,7 +67,7 @@ void demo_ttcp_client()
             Read_n(sfd, &ack, sizeof(ack));
             if(payload.size != ack)
             {
-                DEMO_ERROR("ack[%d] != payload.size[%d]\n");
+                DEMO_ERROR("ack[%d] != payload.size[%d]\n", ack, payload.size);
                 break;
             }
         }
