@@ -9,6 +9,7 @@
 #include <strings.h>        //bzero
 #include <unistd.h>         //read
 #include <signal.h>
+#include <stdio.h>
 
 int Close(int fd);
 int Shutdown(int sockfd, int how);
@@ -22,6 +23,7 @@ int Accept(int sfd, struct sockaddr* addr, socklen_t* plen);
 int Send(int sfd, const void* buf, int len, int flags);
 int Write(int sfd, const void* buf, int len);
 int Read(int fd, void* buf, int len);
+int ReadLine(int fd, void* buf, int len);
 int Write_n(int sfd, const void* buf, int len);
 int Read_n(int fd, void* buf, int len);
 int Getsockopt(int sfd, int level, int optname, void* optval, socklen_t* len);
@@ -29,4 +31,7 @@ int Setsockopt(int sfd, int level, int optname, const void* optval, socklen_t le
 typedef void (*SignalHandler)(int);
 SignalHandler Signal(int signum, SignalHandler handler);
 void HandlerSigCld(int signum);
+char* Fgets(char* s, int size, FILE* stream);
+FILE* Fopen(const char* path, const char* mode);
+int Fclose(FILE* stream);
 #endif

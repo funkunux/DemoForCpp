@@ -133,12 +133,46 @@ int Write_n(int fd, const void* buf, int len)
 int Read(int fd, void* buf, int len)
 {
     int n = 0;
-    if((n = read(fd, buf, len))== -1)
+    while((n = read(fd, buf, len)) < 0)
     {
-        DEMO_ERROR("read error: %m\n");
-        exit(1);
+        if(errno != EINTR)
+        {
+            DEMO_ERROR("read error: %m\n");
+            exit(1);
+        }
     }
     return n;
+}
+
+int ReadLine(int fd, void* buf, int len)
+{
+    int n = 0;
+    int readN;
+    char c;
+    char* ptr = reinterpret_cast<char*>(buf);
+    for(readN = 0; readN < len - 1; readN++)
+    {
+        if((n = read(fd, &c, 1)) == 1)
+        {
+            *ptr++ = c;
+            if('\n' == c)
+            {
+                break;
+            }
+        }
+        else if(n == 0)
+        {
+            DEMO_DEBUG("Reach EOF\n");
+            break;
+        }
+        else if(EINTR != errno)
+        {
+            DEMO_ERROR("read error: %m\n");
+            exit(1);
+        }
+    }
+    *ptr = 0;
+    return readN;
 }
 
 int Read_n(int fd, void* buf, int len)
@@ -242,4 +276,33 @@ void HandlerSigCld(int signum)
         DEMO_INFO("Child Pid[%d] terminate.\n", pid);
     }
     return;
+}
+
+char* Fgets(char* s, int size, FILE* stream)
+{
+    assert(s);
+    return fgets(s, size, stream);
+}
+
+FILE* Fopen(const char* path, const char* mode)
+{
+    assert(path && mode);
+    FILE* stream = NULL; 
+    if((stream = fopen(path, mode)) == NULL)
+    {
+        DEMO_ERROR("fopen of path(%s) on mode(%s) error: %m\n", path, mode);
+        exit(1);
+    }
+    return stream;
+}
+
+int Fclose(FILE* stream)
+{
+    assert(stream);
+    if(0 != fclose(stream))
+    {
+        DEMO_ERROR("fclose error: %m\n");
+        exit(1);
+    }
+    return 0;
 }

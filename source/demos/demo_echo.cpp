@@ -1,21 +1,22 @@
 #include "Demo.h"
 #include "WebAPI.h"
 #include "Logging.h"
+#include <string.h>     //strnlen
+#include <sys/select.h>
+
 
 #define SERVER_PORT     5002
 #define BUFFSIZE        1024
-
-
+#define PATH            "./build.sh"
 
 void EchoServerWorkRoutine(int fd)
 {
     char buff[BUFFSIZE] = {0};
     int n = 0;
-    while((n = Read_n(fd, buff, BUFFSIZE)) > 0)
+    while((n = Read(fd, buff, BUFFSIZE)) > 0)
     {
         Write_n(fd, buff, n);
     }
-    Close(fd);
 }
 
 void demo_echo_server()
@@ -37,6 +38,7 @@ void demo_echo_server()
         {
             Close(serFd);
             EchoServerWorkRoutine(cliFd);
+            Close(cliFd);
             exit(0);
         }
         Close(cliFd);
@@ -46,17 +48,60 @@ void demo_echo_server()
 
 void demo_echo_client()
 {
-    char buff[BUFFSIZE] = {0};
+    char sendLine[BUFFSIZE] = {0};
+    char readLine[BUFFSIZE] = {0};
     int cliFd = Socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in serAddr = {0};
     serAddr.sin_family = AF_INET;
     serAddr.sin_port = htons(SERVER_PORT);
     Inet_pton(AF_INET, "127.0.0.1", &serAddr.sin_addr.s_addr);
     Connect(cliFd, reinterpret_cast<struct sockaddr*>(&serAddr), sizeof(serAddr));
-    Write(cliFd, "HELLO", 5);
-    Shutdown(cliFd, SHUT_WR);
-    Read_n(cliFd, buff, BUFFSIZE);
-    buff[BUFFSIZE - 1] = 0;
-    DEMO_INFO("echo: %s\n", buff);
+    FILE* pfile = Fopen(PATH, "r");
+
+    fd_set readSet;
+    int fileFd = fileno(pfile);
+    int maxfdp1 = (fileFd > cliFd ? fileFd : cliFd) + 1;
+    bool endOfFile = false;
+    while(true)
+    {
+        FD_ZERO(&readSet);
+        if(!endOfFile)
+            FD_SET(fileFd, &readSet);
+        FD_SET(cliFd, &readSet);
+        
+        select(maxfdp1, &readSet, NULL, NULL, NULL);
+
+        if(FD_ISSET(cliFd, &readSet))
+        {
+            if(0 == Read(cliFd, readLine, BUFFSIZE))
+            {
+                if(endOfFile)
+                {
+                    break;
+                }
+                else
+                {
+                    DEMO_ERROR("Unnormally reach EOF: %m\n");
+                }
+            }
+            printf(readLine);
+        }
+
+        if(FD_ISSET(fileFd, &readSet))
+        {
+            assert(!endOfFile);
+            if(Read(fileFd, sendLine, BUFFSIZE) == 0)
+            {
+                Shutdown(cliFd, SHUT_WR);
+                Fclose(pfile);
+                endOfFile = true;
+                continue;
+            }
+            //DEMO_DEBUG(sendLine);
+            Write(cliFd, sendLine, strnlen(sendLine, BUFFSIZE - 1));
+        }
+    }
+    //Shutdown(cliFd, SHUT_WR);
+    
     Close(cliFd);
 }
